@@ -156,7 +156,7 @@ struct _opt_checklist
 /* Log file */
 #define DRCOMCD_LOG_FILE "/var/log/drcomcd"
 
-#define DRCOM_CONF "drcom.conf"
+#define DRCOM_CONF "/etc/drcom.conf"
 
 #define READ_END        0
 #define WRITE_END       1

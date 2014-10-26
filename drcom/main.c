@@ -24,7 +24,7 @@
 
 int main(int argc, char **argv)
 {
-	int sock, ret;
+	int sock, ret, r;
 	struct sockaddr_in serv_addr;
 	unsigned char send_data[SEND_DATA_SIZE];
 	char recv_data[RECV_DATA_SIZE];
@@ -43,7 +43,11 @@ int main(int argc, char **argv)
     //response = (struct drcom_host_msg *) malloc(sizeof(struct drcom_host_msg));
     user_info = (struct user_info_pkt *) malloc(sizeof(struct user_info_pkt));
 
-	_readconf(conf, info, host, user_info);
+	r = _readconf(conf, info, host, user_info);
+	if (r){
+	    fprintf(stderr, "[drcom]: read conf file failed.\n");
+	    return r;
+	}
 
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0) {

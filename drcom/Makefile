@@ -13,12 +13,12 @@ all: drcom.h drcom.c md5.h md5.c main.c
 
 clean:
 #	@for x in $(SUBDIRS); do (cd $$x && make clean) || exit 1; done
-    @if [ -f /etc/drcom.conf ]; then \
-	    rm -f /etc/drcom.conf
-	fi
-	@if [ -f /usr/local/bin/drcom ]; then \
-	    rm -f /usr/local/bin/drcom
-	fi
+	@if [ -e /etc/drcom.conf ]; then \
+	    rm -f /etc/drcom.conf; \
+	fi;
+	@if [ -e /usr/local/bin/drcom ]; then \
+	    rm -f /usr/local/bin/drcom; \
+	fi;
 
 install:
 #	@for x in $(SUBDIRS); do (cd $$x && make install) || exit 1; done
@@ -35,14 +35,14 @@ install:
 		echo "====================================" \
 		;\
 	else\
-		install -m 600 drcom.conf /etc/drcom.conf && \
+		install -m 755 drcom.conf /etc/drcom.conf && \
 		echo "====================================" && \
 		echo "" && \
 		echo "Do Not Forget To Edit /etc/drcom.conf" && \
 		echo "" && \
 		echo "====================================" \
 		;\
-	fi
+	fi;
 	@echo
 	@install -m 755 drcom $(DESTDIR)
 
