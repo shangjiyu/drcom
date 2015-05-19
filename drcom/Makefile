@@ -3,13 +3,21 @@ DESTDIR = /usr/local/bin/
 
 export TOPSRCDIR DESTDIR
 
-#SUBDIRS = drcomc drcomd kmod 
+CC = gcc
+WARN = -Wall
+OPTIMIZE = -g
+CFLAGS = $(WARN) $(OPTIMIZE) 
+
+BINS = drcom
+OBJS = drcom.o main.o
+SRCS = drcom.c md5.c main.c
+INCS = drcom.h md5.h
 
 .PHONY: all clean install
 
-all: drcom.h drcom.c md5.h md5.c main.c
+all: $(SRCS)
 #	@for x in $(SUBDIRS); do (cd $$x && make all) || exit 1; done
-	gcc drcom.h drcom.c main.c md5.h md5.c -o drcom
+	$(CC) $(SRCS) -o $(BINS)
 
 clean:
 #	@for x in $(SUBDIRS); do (cd $$x && make clean) || exit 1; done

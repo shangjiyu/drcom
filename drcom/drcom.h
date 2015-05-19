@@ -1,12 +1,10 @@
 /*
-  drcom zjut dirty hacked
-*/
+ drcom zjut dirty hacked
+ */
 
 #ifndef DRCOMD_H_
 #define DRCOMD_H_
 
-#include <stdint.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +12,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <linux/if.h>
-
 #include <time.h>
 #include "md5.h"
 
@@ -40,27 +36,27 @@ struct msg_item
 
 struct drcom_conf
 {
-  char username[36];
-  char password[16];
-  char device[IFNAMSIZ];
-  long mac;
-  u_int8_t mac0[6];
-  u_int32_t nic[4];
-  u_int32_t dnsp;
-  u_int32_t dnss;
-  u_int32_t dhcp;
-  u_int32_t hostip;
-  u_int32_t servip;
-  u_int16_t hostport;
-  u_int16_t servport;
-  char hostname[32];
-  u_int32_t winver_major;
-  u_int32_t winver_minor;
-  u_int32_t winver_build;
-  char servicepack[32];
-  int  autologout;
-  int except_count;
-  struct e_address *except;
+    char username[36];
+    char password[16];
+    //char device[IFNAMSIZ];
+    u_int8_t mac[6];
+    u_int8_t mac0[6];
+    u_int32_t nic[4];
+    u_int32_t dnsp;
+    u_int32_t dnss;
+    u_int32_t dhcp;
+    u_int32_t hostip;
+    u_int32_t servip;
+    u_int16_t hostport;
+    u_int16_t servport;
+    char hostname[32];
+    u_int32_t winver_major;
+    u_int32_t winver_minor;
+    u_int32_t winver_build;
+    char servicepack[32];
+    int autologout;
+    int except_count;
+    struct e_address *except;
 };
 
 struct drcom_host
@@ -76,28 +72,30 @@ struct drcom_host
     u_int32_t winver_build;
     u_int32_t unknown1;
     char servicepack[32];
-} __attribute__ ((__packed__));
+}__attribute__ ((__packed__));
 
 struct drcom_info
 {
-  char username[36];
-  char password[16];
-  char device[IFNAMSIZ];
-  long mac;
-  u_int32_t nic[4];
-  u_int32_t hostip;
-  u_int32_t servip;
-  u_int16_t hostport;
-  u_int16_t servport;
+    char username[36];
+    char password[16];
+    //char device[IFNAMSIZ];
+    u_int8_t mac[6];
+    u_int32_t nic[4];
+    u_int32_t hostip;
+    u_int32_t servip;
+    u_int16_t hostport;
+    u_int16_t servport;
 };
 
-struct user_info_pkt {
+struct user_info_pkt
+{
     char *username;
     char *password;
     char *hostname;
     char *os_name;
     //long ip_addr;
     long mac_addr;
+    u_int8_t mac[6];
     int username_len;
     int password_len;
     int hostname_len;
@@ -111,27 +109,27 @@ struct drcom_auth
     u_int16_t servport;
     u_int32_t hostip;
     u_int16_t hostport;
-} __attribute__ ((__packed__));
+}__attribute__ ((__packed__));
 
 struct drcom_session_info
 {
-  uint8_t auth[sizeof(struct drcom_auth)];
-  uint32_t hostip;
-  uint32_t servip;
-  uint16_t hostport;
-  uint16_t servport;
-  uint32_t dnsp;
-  uint32_t dnss;
+    uint8_t auth[sizeof(struct drcom_auth)];
+    uint32_t hostip;
+    uint32_t servip;
+    uint16_t hostport;
+    uint16_t servport;
+    uint32_t dnsp;
+    uint32_t dnss;
 };
 
 /*
-    Some kind of checklist:
-    + 0 means option was never encountered in the config file
-    + 1 means option found, value specified and valid
-    + 2 means option found, value specified and invalid
-    + 3 means option found, but no value specified
-    + 4 means option found more than once
-*/
+ Some kind of checklist:
+ + 0 means option was never encountered in the config file
+ + 1 means option found, value specified and valid
+ + 2 means option found, value specified and invalid
+ + 3 means option found, but no value specified
+ + 4 means option found more than once
+ */
 struct _opt_checklist
 {
     u_int8_t username;
@@ -175,27 +173,32 @@ extern int status;
     || (x >= '0' && x <= '9') \
     || (x == '_' || x == '=' || x == '.' || x == ',' || x == ':' || x == '/'))
 
-
 int __stripcomments(char *);
 int __tidyup(char *);
 int __optname(char *, char *);
 int __optval(char *, char *);
 int __parseopt(struct drcom_conf *, char *, struct _opt_checklist *opts);
-int __fillopts(struct drcom_conf *, struct drcom_info *, struct user_info_pkt *, struct drcom_host *, struct _opt_checklist *);
+int __fillopts(struct drcom_conf *, struct drcom_info *, struct user_info_pkt *,
+        struct drcom_host *, struct _opt_checklist *);
 
 void init_conf(struct drcom_conf *);
-int _readconf(struct drcom_conf *, struct drcom_info *, struct drcom_host *, struct user_info_pkt *);
+int _readconf(struct drcom_conf *, struct drcom_info *, struct drcom_host *,
+        struct user_info_pkt *);
 void inflate_user_info(struct user_info_pkt *, struct drcom_conf *);
 
-void set_challenge_data(unsigned char *, int , int );
-void challenge(int , struct sockaddr_in , unsigned char *, int , char *, int );
+void set_challenge_data(unsigned char *, int, int);
+void challenge(int, struct sockaddr_in, unsigned char *, int, char *, int);
 
-void set_login_data(struct user_info_pkt *, unsigned char *, int , unsigned char *, \
-        int , unsigned char *);
+void set_login_data(struct user_info_pkt *, unsigned char *, int,
+        unsigned char *, int, unsigned char *);
 //extern void do_command_login(int, struct drcom_handle *);
-void login(int , struct sockaddr_in , unsigned char *, int , char *, int , unsigned char *, int );
+void login(int, struct sockaddr_in, unsigned char *, int, char *, int,
+        unsigned char *, int);
 
-void set_alive_data(unsigned char *, int , unsigned char *,int , unsigned char *, int );
+void set_alive_data(unsigned char *, int, unsigned char *, int, unsigned char *,
+        int);
+void set_misc1_data(unsigned char *, int, unsigned char *, int);
+void set_misc3_data(unsigned char *, int, unsigned char *, unsigned char*, int);
 
 void keep_alive();
 
