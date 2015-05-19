@@ -7,7 +7,7 @@
 
 ```shell	
 make all
-sudo make intall
+sudo make install
 ```
 
 ## 直接在终端运行 drcom 
